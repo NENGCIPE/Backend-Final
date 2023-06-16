@@ -49,7 +49,7 @@ public class RecipeService {
         ArrayList<Recipe> randomList = new ArrayList<>();
         Random random = new Random();
         if (randomList.size() > 0) {
-            for (int i = 0; i < 15; i++) {
+            for (int i = 0; i < 12; i++) {
                 int randomInt = random.nextInt(matchingRecipes.size());
                 Recipe randomRecipe = matchingRecipes.get(randomInt);
                 randomList.add(randomRecipe);
