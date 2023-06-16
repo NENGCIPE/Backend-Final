@@ -8,6 +8,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class HealthController {
     @RequestMapping("/")
     public String healthCheck() {
-        return "success3";
+        return "success4";
     }
 }
