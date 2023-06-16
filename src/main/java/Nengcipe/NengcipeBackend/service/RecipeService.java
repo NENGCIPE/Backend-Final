@@ -48,11 +48,14 @@ public class RecipeService {
         }
         ArrayList<Recipe> randomList = new ArrayList<>();
         Random random = new Random();
-        for (int i = 0; i < 15; i++) {
-            int randomInt = random.nextInt(matchingRecipes.size());
-            Recipe randomRecipe = matchingRecipes.get(randomInt);
-            randomList.add(randomRecipe);
-            matchingRecipes.remove(randomInt);
+        if (randomList.size() > 0) {
+            for (int i = 0; i < 15; i++) {
+                int randomInt = random.nextInt(matchingRecipes.size());
+                Recipe randomRecipe = matchingRecipes.get(randomInt);
+                randomList.add(randomRecipe);
+                matchingRecipes.remove(randomInt);
+
+            }
 
         }
 
