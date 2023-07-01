@@ -22,7 +22,7 @@ public class Ingredient {
     @ManyToOne
     @JsonIgnore
     private Member member;
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.PERSIST)
     private Category category;
 
 //    @OneToMany(mappedBy = "ingredient", fetch = FetchType.LAZY)

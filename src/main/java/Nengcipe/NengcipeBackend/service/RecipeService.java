@@ -50,6 +50,7 @@ public class RecipeService {
         Random random = new Random();
         if (matchingRecipes.size() > 0) {
             for (int i = 0; i < 12; i++) {
+                System.out.println(matchingRecipes.size());
                 int randomInt = random.nextInt(matchingRecipes.size());
                 Recipe randomRecipe = matchingRecipes.get(randomInt);
                 randomList.add(randomRecipe);

@@ -77,7 +77,9 @@ public class MemberController {
         Long id = jwtUtil.getId(token); //멤버 PK 가져옴
         Member member = memberService.findById(id);
 
-        Category category = categoryService.findCategoryByName(ingredientDto.getCategoryName());
+//        Category category = categoryService.findCategoryByName(ingredientDto.getCategoryName());
+        Category category = Category.builder()
+                .categoryName(ingredientDto.getCategoryName()).build();
         Ingredient ingredient = ingredientService.registerIngredient(ingredientDto, member, category);
         log.info("name : {} 등록 완료", ingredient.getIngredName());
         IngredientResponseDto response = IngredientResponseDto.of(ingredient);
