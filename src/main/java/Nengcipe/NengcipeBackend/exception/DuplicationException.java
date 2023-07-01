@@ -1,6 +1,5 @@
 package Nengcipe.NengcipeBackend.exception;
 
-import Nengcipe.NengcipeBackend.dto.CategoryDto;
 import lombok.Getter;
 
 @Getter

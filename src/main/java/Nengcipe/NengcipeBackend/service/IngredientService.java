@@ -1,6 +1,5 @@
 package Nengcipe.NengcipeBackend.service;
 
-import Nengcipe.NengcipeBackend.domain.Category;
 import Nengcipe.NengcipeBackend.domain.Ingredient;
 import Nengcipe.NengcipeBackend.domain.Member;
 import Nengcipe.NengcipeBackend.dto.IngredientDto;
@@ -22,7 +21,7 @@ public class IngredientService {
      * 냉장고 재료 저장.
      * 냉장고에 같은 이름이 존재한다면 quantity +1.
      */
-    public Ingredient registerIngredient(IngredientDto ingredientDto, Member member, Category category) {
+    public Ingredient registerIngredient(IngredientDto ingredientDto, Member member) {
         Optional<Ingredient> find = ingredientRepository.findByIngredNameAndMember(ingredientDto.getIngredName(), member);
         //이미 존재한다면 quantity+1
         if (find.isPresent()) {
@@ -35,7 +34,7 @@ public class IngredientService {
                     .ingredName(ingredientDto.getIngredName())
                     .quantity(ingredientDto.getQuantity())
                     .expirationDate(ingredientDto.getExpirationDate())
-                    .category(category)
+                    .category(ingredientDto.getCategoryName())
                     .member(member).build();
             ingredientRepository.save(ingredient);
             return ingredient;

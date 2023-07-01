@@ -32,15 +32,6 @@ public class CustomExceptionManager {
 
         return new ResponseEntity<>(res, HttpStatus.BAD_REQUEST);
     }
-//    @ExceptionHandler(MemberNotFoundException.class)
-//    public ResponseEntity<ResultResponse> memberNotFound(MemberNotFoundException ex) {
-//        ResultResponse res = ResultResponse.builder()
-//                .code(HttpStatus.NOT_FOUND.value())
-//                .message(ex.getMessage())
-//                .result(ex.getMemberReq())
-//                .build();
-//        return new ResponseEntity<>(res, HttpStatus.NOT_FOUND);
-//    }
     @ExceptionHandler(NotFoundException.class)
     public ResponseEntity<ResultResponse> notFoundException(NotFoundException ex) {
         ResultResponse res = ResultResponse.builder()
@@ -50,26 +41,6 @@ public class CustomExceptionManager {
                 .build();
         return new ResponseEntity<>(res, HttpStatus.NOT_FOUND);
     }
-//    @ExceptionHandler(DuplicatedMemberIdException.class)
-//    public ResponseEntity<ResultResponse> duplicatedMemberId(DuplicatedMemberIdException ex) {
-//        ResultResponse res = ResultResponse.builder()
-//                .code(HttpStatus.CONFLICT.value())
-//                .message(ex.getMessage())
-//                .result(ex.getMemberReq())
-//                .build();
-//        return new ResponseEntity<>(res, HttpStatus.CONFLICT);
-//    }
-
-//    //카테고리 이름 중복
-//    @ExceptionHandler(DuplicatedMemberIdException.class)
-//    public ResponseEntity<ResultResponse> duplicatedCategoryName(DuplicatedCategoryNameException ex) {
-//        ResultResponse res = ResultResponse.builder()
-//                .code(HttpStatus.CONFLICT.value())
-//                .message(ex.getMessage())
-//                .result(ex.getCategoryDto())
-//                .build();
-//        return new ResponseEntity<>(res, HttpStatus.CONFLICT);
-//    }
     @ExceptionHandler(DuplicationException.class)
     public ResponseEntity<ResultResponse> duplicationException(DuplicationException ex) {
         ResultResponse res = ResultResponse.builder()

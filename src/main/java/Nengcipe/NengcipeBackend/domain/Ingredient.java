@@ -19,24 +19,19 @@ public class Ingredient {
     private String ingredName;
     private int quantity;
     private LocalDate expiratioinDate;
+    private String category;
     @ManyToOne
     @JsonIgnore
     private Member member;
-    @ManyToOne(cascade = CascadeType.PERSIST)
-    private Category category;
-
-//    @OneToMany(mappedBy = "ingredient", fetch = FetchType.LAZY)
-//    private List<IngredientRecipe> ingredientRecipeList = new ArrayList<>();
 
     @Builder
-    public Ingredient(String ingredName, Integer quantity, LocalDate expirationDate, Category category, Member member) {
+    public Ingredient(String ingredName, Integer quantity, LocalDate expirationDate, String category, Member member) {
         this.ingredName=ingredName;
         this.quantity=quantity;
         this.category=category;
         this.member=member;
         this.expiratioinDate = expirationDate;
         member.getIngredientList().add(this);
-        category.getIngredientList().add(this); //category에 저장.
     }
     public void addQuantity() {
         this.quantity=this.quantity+1;

@@ -33,11 +33,9 @@ public class Member {
         this.memberId = memberId;
         this.password = password;
     }
-    @OneToMany(mappedBy = "member", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "member", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Ingredient> ingredientList = new ArrayList<>();
     @OneToMany(mappedBy = "member", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<MemberRecipe> memberRecipeList = new ArrayList<>();
-/*    @OneToMany(mappedBy = "member", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<Recipe> ingredRecipeList = new ArrayList<>();*/
 
 }

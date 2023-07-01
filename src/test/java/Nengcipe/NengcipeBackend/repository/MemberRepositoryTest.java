@@ -20,11 +20,12 @@ import static org.junit.jupiter.api.Assertions.*;
 @Transactional
 @AutoConfigureTestDatabase(replace= AutoConfigureTestDatabase.Replace.ANY)
 @DataJpaTest
+@DisplayName("회원 테스트")
 class MemberRepositoryTest {
     @Autowired
     private MemberRepository memberRepository;
     @Test
-    @DisplayName("성공 테스트")
+    @DisplayName("저장 테스트")
     public void saveTest() {
         Member member = Member.builder()
                 .memberId("abc123")
@@ -36,7 +37,7 @@ class MemberRepositoryTest {
         assertThat(member.getMemberName()).isEqualTo(save.getMemberName());
     }
     @Test
-    @DisplayName("유저 삭제 테스트")
+    @DisplayName("삭제 테스트")
     void deleteTest() {
         Member member = Member.builder()
                 .memberId("abc123")
@@ -51,7 +52,7 @@ class MemberRepositoryTest {
     }
 
     @Test
-    @DisplayName("유저 검색 테스트")
+    @DisplayName("검색 테스트")
     void findByMemberId() {
 
         Member member = Member.builder()

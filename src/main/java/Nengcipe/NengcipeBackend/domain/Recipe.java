@@ -36,7 +36,8 @@ public class Recipe {
 
     // 이 Recipe 생성 후 RecipeIngredient의 인자로 넣기. 스크랩 할 때는 MemberRecipe의 인자로 넣기
     @Builder
-    public Recipe(String recipeName, String recipeDetail, String recipeIngredName, String recipeIngredAmount, String imgUrl) {
+    public Recipe(Long id, String recipeName, String recipeDetail, String recipeIngredName, String recipeIngredAmount, String imgUrl) {
+        this.id = id;
         this.recipeName = recipeName;
         this.recipeIngredName = recipeIngredName;
         this.recipeIngredAmount = recipeIngredAmount;

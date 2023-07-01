@@ -3,7 +3,6 @@ package Nengcipe.NengcipeBackend.controller;
 import Nengcipe.NengcipeBackend.domain.*;
 import Nengcipe.NengcipeBackend.dto.*;
 import Nengcipe.NengcipeBackend.exception.NotFoundException;
-import Nengcipe.NengcipeBackend.service.CategoryService;
 import Nengcipe.NengcipeBackend.service.IngredientService;
 import Nengcipe.NengcipeBackend.service.MemberService;
 import Nengcipe.NengcipeBackend.util.JwtUtil;
@@ -23,7 +22,6 @@ public class MemberController {
     private final MemberService memberService;
     private final JwtUtil jwtUtil;
     private final IngredientService ingredientService;
-    private final CategoryService categoryService;
 
     @PostMapping
     public ResponseEntity<ResultResponse> registerMember(@Valid @RequestBody MemberDto memberDto) {
@@ -78,9 +76,9 @@ public class MemberController {
         Member member = memberService.findById(id);
 
 //        Category category = categoryService.findCategoryByName(ingredientDto.getCategoryName());
-        Category category = Category.builder()
-                .categoryName(ingredientDto.getCategoryName()).build();
-        Ingredient ingredient = ingredientService.registerIngredient(ingredientDto, member, category);
+//        Category category = Category.builder()
+//                .categoryName(ingredientDto.getCategoryName()).build();
+        Ingredient ingredient = ingredientService.registerIngredient(ingredientDto, member);
         log.info("name : {} 등록 완료", ingredient.getIngredName());
         IngredientResponseDto response = IngredientResponseDto.of(ingredient);
 

@@ -1,14 +1,11 @@
 package Nengcipe.NengcipeBackend.repository;
 
-import Nengcipe.NengcipeBackend.domain.Category;
 import Nengcipe.NengcipeBackend.domain.Ingredient;
 import Nengcipe.NengcipeBackend.domain.Member;
+import Nengcipe.NengcipeBackend.domain.MemberRecipe;
 import jakarta.transaction.Transactional;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -17,13 +14,15 @@ import java.time.LocalDate;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
+
 @Transactional
 @AutoConfigureTestDatabase(replace= AutoConfigureTestDatabase.Replace.ANY)
 @DataJpaTest
 class IngredientRepositoryTest {
     @Autowired
     IngredientRepository ingredientRepository;
+    @Autowired
+    MemberRepository memberRepository;
 
     @Test
     @DisplayName("재료 저장 테스트")
@@ -34,14 +33,11 @@ class IngredientRepositoryTest {
                 .memberName("abc123")
                 .password("123456")
                 .build();
-        Category category = Category.builder()
-                .categoryName("육류")
-                .build();
         Ingredient ingredient = Ingredient.builder()
-                .ingredName("우유")
+                .ingredName("돼지고기")
                 .quantity(1)
                 .expirationDate(LocalDate.now())
-                .category(category)
+                .category("육류")
                 .member(member).build();
 
         //when
@@ -63,14 +59,11 @@ class IngredientRepositoryTest {
                 .memberName("abc123")
                 .password("123456")
                 .build();
-        Category category = Category.builder()
-                .categoryName("육류")
-                .build();
         Ingredient ingredient = Ingredient.builder()
-                .ingredName("우유")
+                .ingredName("돼지고기")
                 .quantity(1)
                 .expirationDate(LocalDate.now())
-                .category(category)
+                .category("육류")
                 .member(member).build();
         Ingredient saveIngredient = ingredientRepository.save(ingredient);
 
@@ -91,14 +84,11 @@ class IngredientRepositoryTest {
                 .memberName("abc123")
                 .password("123456")
                 .build();
-        Category category = Category.builder()
-                .categoryName("육류")
-                .build();
         Ingredient ingredient = Ingredient.builder()
-                .ingredName("우유")
+                .ingredName("돼지고기")
                 .quantity(1)
                 .expirationDate(LocalDate.now())
-                .category(category)
+                .category("육류")
                 .member(member).build();
         Ingredient saveIngredient = ingredientRepository.save(ingredient);
 
@@ -121,15 +111,14 @@ class IngredientRepositoryTest {
                 .memberName("abc123")
                 .password("123456")
                 .build();
-        Category category = Category.builder()
-                .categoryName("육류")
-                .build();
+        memberRepository.save(member);
         Ingredient ingredient = Ingredient.builder()
-                .ingredName("우유")
+                .ingredName("돼지고기")
                 .quantity(1)
                 .expirationDate(LocalDate.now())
-                .category(category)
+                .category("육류")
                 .member(member).build();
+
         Ingredient saveIngredient = ingredientRepository.save(ingredient);
 
         //when

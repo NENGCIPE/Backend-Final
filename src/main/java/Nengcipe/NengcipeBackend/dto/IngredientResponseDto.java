@@ -1,10 +1,6 @@
 package Nengcipe.NengcipeBackend.dto;
 
-import Nengcipe.NengcipeBackend.domain.Category;
 import Nengcipe.NengcipeBackend.domain.Ingredient;
-import Nengcipe.NengcipeBackend.domain.Member;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
@@ -25,6 +21,6 @@ public class IngredientResponseDto {
                 .ingredName(ingredient.getIngredName())
                 .quantity(ingredient.getQuantity())
                 .expirationDate(ingredient.getExpiratioinDate())
-                .categoryName(ingredient.getCategory().getCategoryName()).build();
+                .categoryName(ingredient.getCategory()).build();
     }
 }

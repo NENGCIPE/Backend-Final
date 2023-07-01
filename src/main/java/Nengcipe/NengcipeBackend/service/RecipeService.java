@@ -1,13 +1,9 @@
 package Nengcipe.NengcipeBackend.service;
 
-import Nengcipe.NengcipeBackend.domain.Category;
 import Nengcipe.NengcipeBackend.domain.Ingredient;
 import Nengcipe.NengcipeBackend.domain.Member;
 import Nengcipe.NengcipeBackend.domain.Recipe;
-import Nengcipe.NengcipeBackend.dto.IngredientDto;
-import Nengcipe.NengcipeBackend.dto.MatchingRecipeResponseDto;
 import Nengcipe.NengcipeBackend.exception.NotFoundException;
-import Nengcipe.NengcipeBackend.repository.IngredientRepository;
 import Nengcipe.NengcipeBackend.repository.RecipeRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -25,7 +21,7 @@ public class RecipeService {
     /**
      * 내 재료에 맞는 레시피를 랜덤으로 10개 추출
      */
-    public List<Recipe> findMatchingRecipes(Member member, List<Ingredient> ingredient) throws NotFoundException {
+    public List<Recipe> findMatchingRecipes(List<Ingredient> ingredient) throws NotFoundException {
 
         List<Recipe> CrawlingRecipeList = recipeRepository.findAll();
         List<Recipe> matchingRecipes = new ArrayList<>();
@@ -64,12 +60,6 @@ public class RecipeService {
         return randomList;
     }
 
-/*
-    public Recipe getRecipeById(Long recipeId, Member member) throws NotFoundException {
-        Optional<Recipe> recipeInfo = recipeRepository.findById(recipeId);
-        return recipeInfo.get();
-    }
-*/
 
     public Recipe findRecipeById(Long id) throws NotFoundException {
         Optional<Recipe> recipe = recipeRepository.findById(id);

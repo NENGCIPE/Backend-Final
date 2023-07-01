@@ -25,7 +25,6 @@ public class CrawlingRecipeController {
 
     private final RecipeService recipeService;
     private final MemberService memberService;
-    private final IngredientService ingredientService;
 
     private final JwtUtil jwtUtil;
 
@@ -40,7 +39,7 @@ public class CrawlingRecipeController {
 
             /*  Crawling 레시피와 재료 비교하여 레시피 목록 나열하기  */
             List<Ingredient> ingredients = member.getIngredientList();
-            List<Recipe> matchingRecipes = recipeService.findMatchingRecipes(member, ingredients);
+            List<Recipe> matchingRecipes = recipeService.findMatchingRecipes(ingredients);
             List<MatchingRecipeResponseDto> response = new ArrayList<>();
 
             for (Recipe recipe : matchingRecipes) {
