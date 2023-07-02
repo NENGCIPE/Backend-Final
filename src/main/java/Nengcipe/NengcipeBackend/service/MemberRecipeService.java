@@ -50,7 +50,7 @@ public class MemberRecipeService {
      * @return
      * @throws NotFoundException
      */
-    public MemberRecipe deleteScrapRecipe(Member member, Recipe recipe) throws NotFoundException {
+    public MemberRecipe deleteScrapRecipe(Member member, Recipe recipe) {
         Optional<MemberRecipe> delMemberRecipe = memberRecipeRepository.findByMemberAndRecipe(member, recipe);
         memberRecipeRepository.delete(delMemberRecipe.get());
         return delMemberRecipe.get();

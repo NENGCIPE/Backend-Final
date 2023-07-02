@@ -45,7 +45,7 @@ public class IngredientService {
      *  냉장고 재료 삭제.
      *  만약 quantity가 2이상이라면 -1.
      */
-    public Ingredient deleteIngredient(Member member, Long ingredId) throws NotFoundException {
+    public Ingredient deleteIngredient(Member member, Long ingredId) {
 
         Optional<Ingredient> ingredient = ingredientRepository.findById(ingredId);
         if (ingredient.isEmpty()) {

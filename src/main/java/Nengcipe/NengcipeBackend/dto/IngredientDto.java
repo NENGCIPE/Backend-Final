@@ -1,5 +1,7 @@
 package Nengcipe.NengcipeBackend.dto;
 
+import Nengcipe.NengcipeBackend.domain.Ingredient;
+import Nengcipe.NengcipeBackend.domain.Member;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -22,5 +24,14 @@ public class IngredientDto {
 //    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "Asia/Seoul")
     private LocalDate expirationDate;
+
+    public static Ingredient toEntity(IngredientDto ingredientDto, Member member) {
+        return Ingredient.builder()
+                .ingredName(ingredientDto.ingredName)
+                .category(ingredientDto.categoryName)
+                .quantity(ingredientDto.quantity)
+                .expirationDate(ingredientDto.expirationDate)
+                .member(member).build();
+    }
 
 }

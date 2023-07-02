@@ -34,26 +34,26 @@ public class MemberService {
     public Member deleteMember(Long id) throws NotFoundException {
         Optional<Member> findMember = memberRepository.findById(id);
         if (findMember.isEmpty()) {
-            MemberResponseDto memberReq = MemberResponseDto.of(findMember.get());
-            throw new NotFoundException("유저 아이디", memberReq);
+//            MemberResponseDto memberReq = MemberResponseDto.of(findMember.get());
+            throw new NotFoundException("유저 아이디", null);
         }
         memberRepository.delete(findMember.get());
         return findMember.get();
     }
 
-    public Member findByMemberId(String memberId) throws NotFoundException {
-        Optional<Member> findMember = memberRepository.findByMemberId(memberId);
-        if (findMember.isEmpty()) {
-            MemberResponseDto memberReq = MemberResponseDto.of(findMember.get());
-            throw new NotFoundException("유저 아이디", memberReq);
-        }
-        return findMember.get();
-    }
+//    public Member findByMemberId(String memberId) throws NotFoundException {
+//        Optional<Member> findMember = memberRepository.findByMemberId(memberId);
+//        if (findMember.isEmpty()) {
+//            MemberResponseDto memberReq = MemberResponseDto.of(findMember.get());
+//            throw new NotFoundException("유저 아이디", memberReq);
+//        }
+//        return findMember.get();
+//    }
     public Member findById(Long id) throws NotFoundException {
         Optional<Member> findMember = memberRepository.findById(id);
         if (findMember.isEmpty()) {
-            MemberResponseDto memberReq = MemberResponseDto.of(findMember.get());
-            throw new NotFoundException("유저 아이디", memberReq);
+//            MemberResponseDto memberReq = MemberResponseDto.of(findMember.get());
+            throw new NotFoundException("유저 아이디", null);
         }
         return findMember.get();
     }

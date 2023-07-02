@@ -21,7 +21,7 @@ public class RecipeService {
     /**
      * 내 재료에 맞는 레시피를 랜덤으로 10개 추출
      */
-    public List<Recipe> findMatchingRecipes(List<Ingredient> ingredient) throws NotFoundException {
+    public List<Recipe> findMatchingRecipes(List<Ingredient> ingredient) {
 
         List<Recipe> CrawlingRecipeList = recipeRepository.findAll();
         List<Recipe> matchingRecipes = new ArrayList<>();
@@ -61,7 +61,7 @@ public class RecipeService {
     }
 
 
-    public Recipe findRecipeById(Long id) throws NotFoundException {
+    public Recipe findRecipeById(Long id) {
         Optional<Recipe> recipe = recipeRepository.findById(id);
         /** recipe를 찾지 못한다면, NotFoundException 발생 **/
         if (recipe.isEmpty()) {

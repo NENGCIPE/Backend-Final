@@ -16,7 +16,7 @@ import java.util.Optional;
 public class PrincipalDetailsService implements UserDetailsService{
     private final MemberRepository memberRepository;
     @Override
-    public UserDetails loadUserByUsername(String memberId) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(String memberId) {
         Optional<Member> member = memberRepository.findByMemberId(memberId);
         return new PrincipalDetails(member.get());
     }
