@@ -45,7 +45,7 @@ public class RecipeService {
         ArrayList<Recipe> randomList = new ArrayList<>();
         Random random = new Random();
         if (matchingRecipes.size() > 0) {
-            for (int i = 0; i < 12; i++) {
+            for (int i = 0; i < 12 && matchingRecipes.size() >0; i++) {
                 System.out.println(matchingRecipes.size());
                 int randomInt = random.nextInt(matchingRecipes.size());
                 Recipe randomRecipe = matchingRecipes.get(randomInt);
