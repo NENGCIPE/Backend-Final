@@ -26,8 +26,7 @@ public class IngredientService {
         //이미 존재한다면 quantity+1
         if (find.isPresent()) {
             find.get().addQuantity();
-            ingredientRepository.save(find.get());
-            return find.get();
+            return ingredientRepository.save(find.get());
         }
         else {
             Ingredient ingredient = Ingredient.builder()
@@ -36,8 +35,7 @@ public class IngredientService {
                     .expirationDate(ingredientDto.getExpirationDate())
                     .category(ingredientDto.getCategoryName())
                     .member(member).build();
-            ingredientRepository.save(ingredient);
-            return ingredient;
+            return ingredientRepository.save(ingredient);
         }
     }
     /**
@@ -58,8 +56,7 @@ public class IngredientService {
         //개수가 2이상이면 quantity -1
         if (ingredient.get().getQuantity() > 1) {
             ingredient.get().subQuantity();
-            ingredientRepository.save(ingredient.get());
-            return ingredient.get();
+            return ingredientRepository.save(ingredient.get());
         }
         ingredientRepository.delete(ingredient.get());
         return ingredient.get();

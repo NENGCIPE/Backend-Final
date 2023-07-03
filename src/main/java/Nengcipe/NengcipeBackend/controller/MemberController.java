@@ -25,6 +25,7 @@ public class MemberController {
 
     @PostMapping
     public ResponseEntity<ResultResponse> registerMember(@Valid @RequestBody MemberDto memberDto) {
+        System.out.println("ihi");
         Member member = memberService.registerMember(memberDto);
         MemberResponseDto memberResponseDto = MemberResponseDto.of(member);
         log.info("id : {} 생성 완료", memberResponseDto.getMemberId());

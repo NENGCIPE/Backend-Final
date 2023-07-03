@@ -45,7 +45,7 @@ class MemberRecipeRepositoryTest {
                 .build();
         memberRepository.save(member);
         recipeRepository.save(recipe);
-        MemberRecipe memberRecipe = MemberRecipe.myMemberRecipe()
+        MemberRecipe memberRecipe = MemberRecipe.builder()
                 .member(member)
                 .recipe(recipe).build();
         MemberRecipe saveMemberRecipe = memberRecipeRepository.save(memberRecipe);
@@ -70,7 +70,7 @@ class MemberRecipeRepositoryTest {
                 .build();
         memberRepository.save(member);
         recipeRepository.save(recipe);
-        MemberRecipe memberRecipe = MemberRecipe.myMemberRecipe()
+        MemberRecipe memberRecipe = MemberRecipe.builder()
                 .member(member)
                 .recipe(recipe).build();
         memberRecipeRepository.save(memberRecipe);

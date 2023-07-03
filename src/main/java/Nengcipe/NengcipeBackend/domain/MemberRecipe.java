@@ -19,7 +19,7 @@ public class MemberRecipe {
     @ManyToOne
     private Recipe recipe;
 
-    @Builder(builderClassName = "MyMemberRecipe" , builderMethodName = "myMemberRecipe")
+    @Builder
     public MemberRecipe(Member member, Recipe recipe) {
         this.member=member;
         this.recipe=recipe;

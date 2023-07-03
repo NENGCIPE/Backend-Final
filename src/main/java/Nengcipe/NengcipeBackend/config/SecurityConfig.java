@@ -39,10 +39,9 @@ public class SecurityConfig {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and().apply(new MyCustom())
                 .and().addFilter(corsFilter)
-                .csrf().disable()
                 .cors().and()
                 .authorizeRequests()
-                .requestMatchers(HttpMethod.POST,"/api/users/**").permitAll()
+                .requestMatchers(HttpMethod.POST,"/api/users").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/recipes/{recipeId}").permitAll()
                 .requestMatchers(HttpMethod.POST, "/api/users/login").permitAll()
                 .requestMatchers(HttpMethod.GET, "/oauth2/login/**").permitAll()
@@ -59,7 +58,7 @@ public class SecurityConfig {
 
     public class MyCustom extends AbstractHttpConfigurer<MyCustom, HttpSecurity> {
         @Override
-        public void configure(HttpSecurity http) throws Exception {
+        public void configure(HttpSecurity http) {
             AuthenticationManager authenticationManager = http.getSharedObject(AuthenticationManager.class);
             JwtAuthenticationFilter jwtAuthenticationFilter = new JwtAuthenticationFilter(authenticationManager, jwtUtil, objectMapper);
             jwtAuthenticationFilter.setFilterProcessesUrl("/api/users/login");
