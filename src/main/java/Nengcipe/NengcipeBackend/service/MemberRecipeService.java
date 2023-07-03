@@ -3,22 +3,14 @@ package Nengcipe.NengcipeBackend.service;
 import Nengcipe.NengcipeBackend.domain.Member;
 import Nengcipe.NengcipeBackend.domain.MemberRecipe;
 import Nengcipe.NengcipeBackend.domain.Recipe;
-import Nengcipe.NengcipeBackend.dto.MemberRecipeRequestDto;
 import Nengcipe.NengcipeBackend.dto.ResultResponse;
 import Nengcipe.NengcipeBackend.exception.DuplicationException;
 import Nengcipe.NengcipeBackend.exception.NotFoundException;
 import Nengcipe.NengcipeBackend.repository.MemberRecipeRepository;
-import Nengcipe.NengcipeBackend.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -44,6 +36,19 @@ public class MemberRecipeService {
                 .build();
         return memberRecipeRepository.save(newMemberRecipe); //newMemberRecipe란 객체를 저장소에 저장하는 역할
 
+    }
+
+    public void checkExist(Member member, Recipe recipe) {
+        Optional<MemberRecipe> find = memberRecipeRepository.findByMemberAndRecipe(member, recipe);
+        if (find.isPresent()) {
+            ResultResponse errRes;
+            errRes = ResultResponse.builder()
+                    .code(HttpStatus.CONFLICT.value())
+                    .message("이미 스크랩된 레시피입니다.")
+                    .result(find.get().getRecipe().getId())
+                    .build();
+            throw new DuplicationException("스크랩 레시피", find.get());
+        }
     }
 
 

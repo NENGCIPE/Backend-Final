@@ -24,7 +24,7 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         PrincipalDetails principal = (PrincipalDetails) authentication.getPrincipal();
         System.out.println(principal.getAttributes());
         System.out.println("oauth2 인증 성공");
-        String jwt = jwtUtil.createJwt(principal.getMember().getMemberId(), principal.getMember().getId());
+        String jwt = jwtUtil.createJwt(principal.getMemberId(), principal.getId());
         String redirectUri = UriComponentsBuilder.fromUriString("https://nengcipe.com/oauth2")
                 .queryParam("accessToken", jwt).build().toUriString();
         getRedirectStrategy().sendRedirect(request, response, redirectUri);

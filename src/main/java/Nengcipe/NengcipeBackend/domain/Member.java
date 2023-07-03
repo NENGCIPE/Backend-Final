@@ -27,8 +27,7 @@ public class Member {
 
     //유저가 탈퇴하면 유저 냉장고 안의 재료 전부 삭제
     @Builder
-    public Member(Long id, String memberName, String memberId, String password) {
-        this.id = id;
+    public Member(String memberName, String memberId, String password) {
         this.memberName = memberName;
         this.memberId = memberId;
         this.password = password;
@@ -37,5 +36,9 @@ public class Member {
     private List<Ingredient> ingredientList = new ArrayList<>();
     @OneToMany(mappedBy = "member", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<MemberRecipe> memberRecipeList = new ArrayList<>();
+
+//    public PrincipalDetails toPrincipalDetails() {
+//        return new PrincipalDetails(this);
+//    }
 
 }

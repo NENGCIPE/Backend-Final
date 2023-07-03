@@ -2,7 +2,7 @@ package Nengcipe.NengcipeBackend.controller;
 
 import Nengcipe.NengcipeBackend.domain.*;
 import Nengcipe.NengcipeBackend.dto.*;
-import Nengcipe.NengcipeBackend.exception.NotFoundException;
+import Nengcipe.NengcipeBackend.oauth2.PrincipalDetails;
 import Nengcipe.NengcipeBackend.service.IngredientService;
 import Nengcipe.NengcipeBackend.service.MemberService;
 import Nengcipe.NengcipeBackend.util.JwtUtil;
@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -24,7 +25,9 @@ public class MemberController {
     private final IngredientService ingredientService;
 
     @PostMapping
-    public ResponseEntity<ResultResponse> registerMember(@Valid @RequestBody MemberDto memberDto) {
+    public ResponseEntity<ResultResponse> registerMember(
+            @Valid @RequestBody MemberDto memberDto
+    ) {
         System.out.println("ihi");
         Member member = memberService.registerMember(memberDto);
         MemberResponseDto memberResponseDto = MemberResponseDto.of(member);
@@ -37,10 +40,12 @@ public class MemberController {
         return new ResponseEntity<>(res, HttpStatus.CREATED);
     }
     @DeleteMapping
-    public ResponseEntity<ResultResponse> deleteMember(HttpServletRequest request) throws NotFoundException {
-        String token = (String) request.getAttribute("token");
-        Long id = jwtUtil.getId(token); //멤버 PK 가져옴
+    public ResponseEntity<ResultResponse> deleteMember(
+            @AuthenticationPrincipal PrincipalDetails principalDetails
+    ) {
+        Long id = principalDetails.getId();
         Member member = memberService.deleteMember(id);
+        System.out.println("member = " + member.getMemberId());
         MemberResponseDto memberResponseDto = MemberResponseDto.of(member);
         log.info("id : {} 유저 탈퇴",id);
         ResultResponse res = ResultResponse.builder()
@@ -55,30 +60,30 @@ public class MemberController {
         냉장고 재료 관련 api
      */
     @GetMapping("/fridge")
-    public ResponseEntity<ResultResponse> getMyRefrigerator(HttpServletRequest request) throws NotFoundException {
-        String token = (String) request.getAttribute("token");
-        Long id = jwtUtil.getId(token); //멤버 PK 가져옴
-        Member member = memberService.findById(id);
-
+    public ResponseEntity<ResultResponse> getMyRefrigerator(
+            @AuthenticationPrincipal PrincipalDetails principalDetails
+    ) {
         ResultResponse res = ResultResponse.builder()
                 .code(HttpStatus.OK.value())
                 .message("내 냉장고 정보 가져오기 성공.")
-                .result(member.getIngredientList()).build();
+                .result(principalDetails.getIngredientList()).build();
+        System.out.println("res = " + res.getCode());
         return new ResponseEntity<>(res, HttpStatus.OK);
     }
 
     @PostMapping("/fridge")
-    public ResponseEntity<ResultResponse> registerIngredient(@RequestBody IngredientDto ingredientDto, HttpServletRequest request) throws NotFoundException {
+    public ResponseEntity<ResultResponse> registerIngredient(
+            @RequestBody IngredientDto ingredientDto,
+            @AuthenticationPrincipal PrincipalDetails principalDetails
+    ) {
         //이후 프론트로부터 받은 사진을 네이버 OCR API로 보내는 로직을 작성해야한다.
         //OCR API로 부터 정보들을 받으면 레포지토리에 저장한다.
-        System.out.println("ingredientDto = " + ingredientDto.getExpirationDate());
-        String token = (String) request.getAttribute("token");
-        Long id = jwtUtil.getId(token); //멤버 PK 가져옴
+        Long id = principalDetails.getId();
+        System.out.println("id = " + id);
         Member member = memberService.findById(id);
+        System.out.println("member = " + member);
+        System.out.println("member = " + member);
 
-//        Category category = categoryService.findCategoryByName(ingredientDto.getCategoryName());
-//        Category category = Category.builder()
-//                .categoryName(ingredientDto.getCategoryName()).build();
         Ingredient ingredient = ingredientService.registerIngredient(ingredientDto, member);
         log.info("name : {} 등록 완료", ingredient.getIngredName());
         IngredientResponseDto response = IngredientResponseDto.of(ingredient);
@@ -91,9 +96,12 @@ public class MemberController {
     }
 
     @DeleteMapping("/fridge")
-    public ResponseEntity<ResultResponse> deleteIngredient(@RequestParam Long id, HttpServletRequest request) throws NotFoundException {
-        String token = (String) request.getAttribute("token");
-        Long memberId = jwtUtil.getId(token); //멤버 PK 가져옴
+    public ResponseEntity<ResultResponse> deleteIngredient(
+            @RequestParam Long id,
+            @AuthenticationPrincipal PrincipalDetails principalDetails
+    ) {
+        Long memberId = principalDetails.getId();
+
         Member member = memberService.findById(memberId);
 
         //권한 체크는 서비스 계층에서

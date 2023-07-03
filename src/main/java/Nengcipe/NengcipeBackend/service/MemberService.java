@@ -1,14 +1,18 @@
 package Nengcipe.NengcipeBackend.service;
 
+import Nengcipe.NengcipeBackend.domain.Ingredient;
 import Nengcipe.NengcipeBackend.domain.Member;
 import Nengcipe.NengcipeBackend.dto.MemberDto;
 import Nengcipe.NengcipeBackend.dto.MemberResponseDto;
 import Nengcipe.NengcipeBackend.exception.*;
+import Nengcipe.NengcipeBackend.oauth2.PrincipalDetails;
 import Nengcipe.NengcipeBackend.repository.MemberRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -56,6 +60,16 @@ public class MemberService {
             throw new NotFoundException("유저 아이디", null);
         }
         return findMember.get();
+    }
+
+    @Transactional
+    public PrincipalDetails findPrincipalDetailsById(Long id) {
+        Optional<Member> findMember = memberRepository.findById(id);
+        if (findMember.isEmpty()) {
+            throw new NotFoundException("유저 아이디", null);
+        }
+        System.out.println("findMember = " + findMember.get().getMemberRecipeList());
+        return new PrincipalDetails(findMember.get());
     }
 
     public String login(String memberId, String memberPwd) throws NotFoundException {

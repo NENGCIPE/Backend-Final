@@ -5,6 +5,7 @@ import Nengcipe.NengcipeBackend.filter.JwtAuthorizationFilter;
 import Nengcipe.NengcipeBackend.oauth2.OAuth2MemberService;
 import Nengcipe.NengcipeBackend.oauth2.OAuth2SuccessHandler;
 import Nengcipe.NengcipeBackend.repository.MemberRepository;
+import Nengcipe.NengcipeBackend.service.MemberService;
 import Nengcipe.NengcipeBackend.util.JwtUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -27,7 +28,7 @@ public class SecurityConfig {
     private final CorsFilter corsFilter;
     private final JwtUtil jwtUtil;
     private final ObjectMapper objectMapper;
-    private final MemberRepository memberRepository;
+    private final MemberService memberService;
     private final OAuth2MemberService oAuth2MemberService;
     private final OAuth2SuccessHandler oAuth2SuccessHandler;
     @Bean
@@ -64,7 +65,7 @@ public class SecurityConfig {
             jwtAuthenticationFilter.setFilterProcessesUrl("/api/users/login");
             http
                     .addFilter(jwtAuthenticationFilter)
-                    .addFilter(new JwtAuthorizationFilter(authenticationManager, memberRepository, jwtUtil));
+                    .addFilter(new JwtAuthorizationFilter(authenticationManager, memberService, jwtUtil));
 
         }
     }
