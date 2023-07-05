@@ -2,6 +2,7 @@ package Nengcipe.NengcipeBackend.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 import java.time.LocalDate;
@@ -15,10 +16,14 @@ public class Ingredient {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ingred_id")
     private Long id;
-
+    @Column(length = 100)
+    @NotNull
     private String ingredName;
-    private int quantity;
+    @NotNull
+    private Integer quantity;
+    @NotNull
     private LocalDate expiratioinDate;
+    @NotNull
     private String category;
     @ManyToOne
     @JsonIgnore

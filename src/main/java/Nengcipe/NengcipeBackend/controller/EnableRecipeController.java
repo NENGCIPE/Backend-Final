@@ -24,9 +24,6 @@ import java.util.List;
 public class EnableRecipeController {
 
     private final RecipeService recipeService;
-    private final MemberService memberService;
-
-    private final JwtUtil jwtUtil;
 
     @GetMapping("/all")
     public ResponseEntity<ResultResponse> getMatchingRecipes(

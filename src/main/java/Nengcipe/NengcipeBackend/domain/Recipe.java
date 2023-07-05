@@ -2,6 +2,7 @@ package Nengcipe.NengcipeBackend.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -18,15 +19,19 @@ public class Recipe {
     @Id
     @Column(name = "recipe_id")
     private Long id;
-    @Column(length=2000)
+    @NotNull
+    @Column(length = 2000)
     private String recipeName;
+    @NotNull
     @Column(length = 2000)
     private String recipeDetail;
-
+    @NotNull
     @Column(length = 2000)
     private String recipeIngredName;
+    @NotNull
     @Column(length = 2000)
     private String recipeIngredAmount;
+    @NotNull
     @Column(length = 2000)
     private String imgUrl;
 

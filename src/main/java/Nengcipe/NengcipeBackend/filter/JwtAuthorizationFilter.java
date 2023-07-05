@@ -42,39 +42,22 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
         String jwt = request.getHeader("Authorization");
         //jwt가 없거나 Bearer로 시작하지 않으면 거부
         if (jwt == null || !jwt.startsWith("Bearer")) {
+
             chain.doFilter(request, response);
             return;
-//            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-//            response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-//            response.setCharacterEncoding("utf-8");
-//            ResultResponse res = ResultResponse.builder()
-//                    .code(HttpServletResponse.SC_FORBIDDEN)
-//                    .message("올바른 토큰이 아닙니다.").build();
-//            try {
-//                ObjectMapper objectMapper = new ObjectMapper();
-//                String s = objectMapper.writeValueAsString(res);
-//                PrintWriter writer = response.getWriter();
-//                writer.write(s);
-//                return;
-//            } catch (IOException ex) {
-//                throw new RuntimeException(ex);
-//            }
         }
         //Bearer를 제거하고 jwt 값만 가져옴
         String token = request.getHeader("Authorization").replace("Bearer ", "");
-        Long id = jwtUtil.getId(token);
-        String memberId = jwtUtil.getMemberId(token);
         //만료 여부 체크
         if (jwtUtil.isExpired(token)) {
-            log.info("id : {} 토큰 만료", memberId);
-            MemberResponseDto responseDto = MemberResponseDto.builder().memberId(memberId).build();
+            log.info("토큰이 만료되었습니다.");
             response.setStatus(HttpServletResponse.SC_FORBIDDEN);
             response.setContentType(MediaType.APPLICATION_JSON_VALUE);
             response.setCharacterEncoding("utf-8");
             ResultResponse res = ResultResponse.builder()
                     .code(HttpServletResponse.SC_FORBIDDEN)
                     .message("토큰 만료")
-                    .result(responseDto).build();
+                    .result(null).build();
             try {
                 ObjectMapper objectMapper = new ObjectMapper();
                 String s = objectMapper.writeValueAsString(res);
@@ -89,6 +72,8 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
 //        Member member = memberService.findById(id);
 //        Member member = memberService.findByIdWithIngredients(id);
         PrincipalDetails principalDetails = null;
+        Long id = jwtUtil.getId(token);
+        String memberId = jwtUtil.getMemberId(token);
         try {
             principalDetails = memberService.findPrincipalDetailsById(id);
 

@@ -6,6 +6,8 @@ import Nengcipe.NengcipeBackend.oauth2.OAuth2MemberService;
 import Nengcipe.NengcipeBackend.oauth2.OAuth2SuccessHandler;
 import Nengcipe.NengcipeBackend.repository.MemberRepository;
 import Nengcipe.NengcipeBackend.service.MemberService;
+import Nengcipe.NengcipeBackend.util.CustomAccessDeniedHandler;
+import Nengcipe.NengcipeBackend.util.CustomAuthenticationEntryPoint;
 import Nengcipe.NengcipeBackend.util.JwtUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -31,6 +33,8 @@ public class SecurityConfig {
     private final MemberService memberService;
     private final OAuth2MemberService oAuth2MemberService;
     private final OAuth2SuccessHandler oAuth2SuccessHandler;
+    private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
+    private final CustomAccessDeniedHandler customAccessDeniedHandler;
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception{
         return httpSecurity
@@ -40,14 +44,17 @@ public class SecurityConfig {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and().apply(new MyCustom())
                 .and().addFilter(corsFilter)
-                .cors().and()
-                .authorizeRequests()
+                .cors()
+                .and().authorizeRequests()
                 .requestMatchers(HttpMethod.POST,"/api/users").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/recipes/{recipeId}").permitAll()
                 .requestMatchers(HttpMethod.POST, "/api/users/login").permitAll()
                 .requestMatchers(HttpMethod.GET, "/oauth2/login/**").permitAll()
                 .requestMatchers("/").permitAll()
                 .anyRequest().authenticated()
+                .and().exceptionHandling()
+                .authenticationEntryPoint(customAuthenticationEntryPoint)
+                .accessDeniedHandler(customAccessDeniedHandler)
                 .and()
                 .oauth2Login()
                 .authorizationEndpoint().baseUri("/oauth2/authorization")

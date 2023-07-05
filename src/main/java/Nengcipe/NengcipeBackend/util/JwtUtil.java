@@ -1,6 +1,7 @@
 package Nengcipe.NengcipeBackend.util;
 
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.beans.factory.annotation.Value;
@@ -25,8 +26,12 @@ public class JwtUtil {
     }
 
     public boolean isExpired(String token) {
-        return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token)
-                .getBody().getExpiration().before(new Date());
+        try {
+            return !Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token)
+                    .getBody().getExpiration().before(new Date());
+        } catch (ExpiredJwtException e) {
+            return true;
+        }
     }
 
     public String createJwt(String memberId, Long id) {

@@ -21,7 +21,6 @@ public class IngredientDto {
     private String ingredName;
     private String categoryName;
     private Integer quantity;
-//    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "Asia/Seoul")
     private LocalDate expirationDate;
 

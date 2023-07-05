@@ -4,6 +4,7 @@ import Nengcipe.NengcipeBackend.dto.JwtResponse;
 import Nengcipe.NengcipeBackend.dto.MemberDto;
 import Nengcipe.NengcipeBackend.dto.MemberResponseDto;
 import Nengcipe.NengcipeBackend.dto.ResultResponse;
+import Nengcipe.NengcipeBackend.exception.NotFoundException;
 import Nengcipe.NengcipeBackend.oauth2.PrincipalDetails;
 import Nengcipe.NengcipeBackend.util.JwtUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -15,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -33,91 +35,42 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
     //로그인을 시도할 때 실행
     @Override
-    public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
-        MemberDto memberDto = null;
-        ResultResponse res;
+    public Authentication attemptAuthentication(
+            HttpServletRequest request,
+            HttpServletResponse response
+    ) throws AuthenticationException {
         try {
-            memberDto = objectMapper.readValue(request.getInputStream(), MemberDto.class); //request로 들어온 JSON 형식을 MemberDto로 가져옴
+            MemberDto memberDto = objectMapper.readValue(request.getInputStream(), MemberDto.class); //request로 들어온 JSON 형식을 MemberDto로 가져옴
+            if (memberDto.getMemberId() == null) {
+                writeErrorResponse(response, HttpServletResponse.SC_BAD_REQUEST, "아이디는 필수 값입니다.");
+                return null;
+            } else if (memberDto.getPassword() == null) {
+                writeErrorResponse(response, HttpServletResponse.SC_BAD_REQUEST, "비밀번호는 필수 값입니다.");
+                return null;
+
+            }
             log.info("id : {} 로그인 시도", memberDto.getMemberId());
-//            if (memberDto.getMemberId() == null) {
-//                response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-//                response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-//                response.setCharacterEncoding("utf-8");
-//                MemberResponseDto memberResponseDto = new MemberResponseDto(memberDto.getMemberId());
-//                log.info("id : {} 로그인 실패", memberDto.getMemberId());
-//                res = ResultResponse.builder()
-//                        .code(HttpServletResponse.SC_BAD_REQUEST)
-//                        .message("유저 아이디는 필수 값입니다.")
-//                        .result(memberResponseDto).build();
-//                try {
-//                    String s = objectMapper.writeValueAsString(res);
-//                    PrintWriter writer = response.getWriter();
-//                    writer.write(s);
-//                    return null;
-//                } catch (IOException ex) {
-//                    throw new RuntimeException(ex);
-//                }
-//            } else if (memberDto.getPassword() == null) {
-//                response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-//                response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-//                response.setCharacterEncoding("utf-8");
-//                MemberResponseDto memberResponseDto = new MemberResponseDto(memberDto.getMemberId());
-//                log.info("id : {} 로그인 실패", memberDto.getMemberId());
-//                res = ResultResponse.builder()
-//                        .code(HttpServletResponse.SC_BAD_REQUEST)
-//                        .message("비밀번호는 필수 값입니다.")
-//                        .result(memberResponseDto).build();
-//                try {
-//                    String s = objectMapper.writeValueAsString(res);
-//                    PrintWriter writer = response.getWriter();
-//                    writer.write(s);
-//                    return null;
-//                } catch (IOException ex) {
-//                    throw new RuntimeException(ex);
-//                }
-
-//            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(memberDto.getMemberId(), memberDto.getPassword());
-        try {
-            //인증 실행
+            UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(memberDto.getMemberId(), memberDto.getPassword());
             Authentication authenticate = authenticationManager.authenticate(token);
             return authenticate;
-
-        } catch (RuntimeException e) {
-            //해당 유저가 없으면 에러 반환. 이 부분은 나중에 구체적으로 변경하기.
-            //에러 JSON 반환
-            System.out.println("e = " + e.getMessage());
-            System.out.println("e = " + e.getClass());
-            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
-            response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-            response.setCharacterEncoding("utf-8");
-            MemberResponseDto memberResponseDto = new MemberResponseDto(memberDto.getMemberId());
-            log.info("id : {} 로그인 실패", memberDto.getMemberId());
-            res = ResultResponse.builder()
-                    .code(HttpServletResponse.SC_BAD_REQUEST)
-                    .message(e.getMessage())
-                    .result(memberResponseDto).build();
-            try {
-                String s = objectMapper.writeValueAsString(res);
-                PrintWriter writer = response.getWriter();
-                writer.write(s);
-                return null;
-            }
-            catch (IOException ex) {
-                throw new RuntimeException(ex);
-            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (InternalAuthenticationServiceException e) {
+            writeErrorResponse(response, HttpServletResponse.SC_NOT_FOUND,e.getMessage());
         }
+
+        return null;
     }
     //인증을 성공하면 실행
     //response Authorization header에 jwt를 담아서 보내줌
     @Override
-    protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException, ServletException {
+    protected void successfulAuthentication(
+            HttpServletRequest request,
+            HttpServletResponse response,
+            FilterChain chain,
+            Authentication authResult)
+    {
         PrincipalDetails member = (PrincipalDetails) authResult.getPrincipal();
-//        Member member = principal.getMember();
         String jwt = jwtUtil.createJwt(member.getMemberId(), member.getId());
         log.info("id : {} 로그인 성공", member.getMemberId());
         //서블릿으로 JSON 응답
@@ -127,7 +80,31 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         ResultResponse res = ResultResponse.builder()
                 .code(HttpServletResponse.SC_OK)
                 .message("로그인 성공")
-                .result(new JwtResponse("Bearer "+jwt)).build();
+                .result(new JwtResponse("Bearer ")+jwt).build();
+        try {
+            String s = objectMapper.writeValueAsString(res);
+            PrintWriter writer = response.getWriter();
+            writer.write(s);
+        } catch (IOException ex) {
+            throw new RuntimeException(ex);
+        }
+    }
+//    @Override
+//    protected void unsuccessfulAuthentication(
+//            HttpServletRequest request,
+//            HttpServletResponse response,
+//            AuthenticationException failed
+//    ) {
+//        //비밀번호 틀림
+//        writeErrorResponse(response, HttpServletResponse.SC_BAD_REQUEST, failed.getMessage());
+//    }
+    private void writeErrorResponse(HttpServletResponse response, int status, String message) {
+        response.setStatus(status);
+        response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+        response.setCharacterEncoding("utf-8");
+        ResultResponse res = ResultResponse.builder()
+                .code(status)
+                .message(message).build();
         try {
             String s = objectMapper.writeValueAsString(res);
             PrintWriter writer = response.getWriter();

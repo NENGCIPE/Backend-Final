@@ -19,8 +19,10 @@ public class Member {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @NotNull(message="이름은 필수 값입니다.")
+    @Column(length=100)
     private String memberName;
     @NotNull(message = "아이디는 필수 값입니다.")
+    @Column(length=100)
     private String memberId;
     @NotNull(message = "비밀번호는  필수 값입니다.")
     private String password;
